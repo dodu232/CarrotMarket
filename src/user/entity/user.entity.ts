@@ -17,6 +17,6 @@ export class User {
   @Column()
   profile: number;
 
-  @Column('timestamp')
-  regData: Date;
+  @Column({ name: 'reg_deate', type: 'timestamp' })
+  regDate: Date;
 }

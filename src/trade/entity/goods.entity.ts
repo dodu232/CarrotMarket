@@ -23,8 +23,8 @@ export class Goods {
   @Column()
   content: string;
 
-  @Column('timestamp')
-  reg_date: Date;
+  @Column({ name: 'reg_deate', type: 'timestamp' })
+  regDate: Date;
 
   @Column()
   chat: number;

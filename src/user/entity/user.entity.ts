@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'user' })
 export class User {
@@ -17,6 +17,6 @@ export class User {
   @Column()
   profile: number;
 
-  @Column({ name: 'reg_deate', type: 'timestamp' })
+  @Column({ name: 'reg_date', type: 'timestamp' })
   regDate: Date;
 }

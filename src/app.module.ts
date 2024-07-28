@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { User } from './user/entity/user.entity';
 import { TradeModule } from './trade/trade.module';
 import { APP_PIPE } from '@nestjs/core';
+import { ImageModule } from './image/image.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { APP_PIPE } from '@nestjs/core';
     TypeOrmModule.forFeature([User]),
     UserModule,
     TradeModule,
+    ImageModule,
   ],
   controllers: [AppController],
   providers: [

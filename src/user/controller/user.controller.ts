@@ -1,7 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { UserService } from 'src/user/service/user.service';
 import { CreateUserDto } from '../dto/createUser.dto';
 import { LoginUserDto } from 'src/user/dto/loginUser.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { storage } from 'src/image/storage.config'
 
 @Controller('user')
 export class UserController {
@@ -9,8 +11,9 @@ export class UserController {
 
   // 회원 가입
   @Post('signUp')
-  createUser(@Body() dto: CreateUserDto) {
-    return this.userService.createUser(dto);
+  @UseInterceptors(FileInterceptor('file', {storage}))
+  createUser(@UploadedFile() file: Express.Multer.File, @Body() dto: CreateUserDto) {
+    return this.userService.createUser(file, dto);
   }
 
   // 로그인

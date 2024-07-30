@@ -7,11 +7,12 @@ import { ImageService } from 'src/image/image.service';
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly imageService: ImageService
+    private readonly imageService: ImageService,
   ) {}
 
   async createUser(file: Express.Multer.File, createUserDto: CreateUserDto) {
-    this.imageService.createImage(file);
-    return this.userRepository.createUser(createUserDto);
+    const imageId = await this.imageService.createProfileImage(file);
+
+    return this.userRepository.createUser(imageId, createUserDto);
   }
 }

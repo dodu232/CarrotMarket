@@ -6,10 +6,18 @@ import { User } from './entity/user.entity';
 import { UserRepository } from './repository/user.repository';
 import { ImageService } from 'src/image/image.service';
 import { ImageRepository } from 'src/image/image.repository';
+import { ImageGroupService } from 'src/image/imageGroup.service';
+import { ImageModule } from 'src/image/image.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User]), ImageModule],
   controllers: [UserController],
-  providers: [UserService, UserRepository, ImageService, ImageRepository],
+  providers: [
+    UserService,
+    UserRepository,
+    ImageService,
+    ImageRepository,
+    ImageGroupService,
+  ],
 })
 export class UserModule {}

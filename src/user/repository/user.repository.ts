@@ -12,8 +12,14 @@ export class UserRepository {
   }
 
   // 회원 가입
-  createUser(createUserDto: CreateUserDto) {
-    return this.repository.save(createUserDto);
+  createUser(imageId: number, createUserDto: CreateUserDto) {
+    const user = new User();
+    user.nickname = createUserDto.nickname;
+    user.phone = createUserDto.phone;
+    user.email = createUserDto.email;
+    user.profile = imageId;
+
+    return this.repository.save(user);
   }
 
   //

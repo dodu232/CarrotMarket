@@ -8,6 +8,7 @@ import { User } from './user/entity/user.entity';
 import { TradeModule } from './trade/trade.module';
 import { APP_PIPE } from '@nestjs/core';
 import { ImageModule } from './image/image.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ImageModule } from './image/image.module';
     UserModule,
     TradeModule,
     ImageModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

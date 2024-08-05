@@ -1,11 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
-export class PhoneVerity{
-    @PrimaryGeneratedColumn()
-    id: number;
-
-    @Column({name: 'phone'})
+@Entity({name: 'phone_verify'})
+export class PhoneVerify{
+    @PrimaryColumn({name: 'phone'})
     phone: string;
 
     @Column({ name: 'code'})

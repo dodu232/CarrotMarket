@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { LoginDto } from 'src/auth/login.dto';
-import { SmsService } from 'src/auth/sms.service';
+import { LoginDto } from 'src/auth/dto/login.dto';
+import { VerifyCodeDto } from 'src/auth/dto/verityCode.dto';
+import { PhoneVerifyRepository } from 'src/auth/repository/phoneVerity.repository';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly smsService: SmsService) {}
-
-  private codes = new Map<string, string>();
+  constructor(private readonly phoneVerifyRepository: PhoneVerifyRepository) {}
 
   generateCode(): string {
     return Math.floor(Math.random() * 900000 + 100000).toString();
@@ -30,20 +29,29 @@ export class AuthService {
     });
   }
 
-  async login(dto: LoginDto) {
+  async createVerifyCode(dto: LoginDto) {
     const code = this.generateCode();
-    this.codes.set(dto.phone, code);
-
-    // return await this.smsService.smsSend(dto.phone, code);
-    return code;
+    this.sendCode(dto.phone, code);
+    return this.phoneVerifyRepository.createVerifyCode(dto, code);
   }
 
-  verifyCode(phone: string, code: string): boolean {
-    const storedCode = this.codes.get(phone);
-    if (storedCode === code) {
-      this.codes.delete(phone);
-      return true;
+  async verifyCode(dto: VerifyCodeDto){
+    const phoneVerify = await this.phoneVerifyRepository.findVerifyCode(dto);
+
+    if(dto.code === phoneVerify.code){
+      const now = new Date();
+      const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+
+      if(phoneVerify.regDate < fiveMinutesAgo){
+          return true;
+      }
+      else {
+          return false;
+      }
+
+    } else {
+        return this.phoneVerifyRepository.deleteVerifyCode(dto);
     }
-    return false;
+
   }
 }

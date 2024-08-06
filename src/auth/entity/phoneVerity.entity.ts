@@ -2,7 +2,10 @@ import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'phone_verify'})
 export class PhoneVerify{
-    @PrimaryColumn({name: 'phone'})
+    @PrimaryGeneratedColumn({name: 'id'})
+    id: number;
+
+    @Column({name: 'phone'})
     phone: string;
 
     @Column({ name: 'code'})

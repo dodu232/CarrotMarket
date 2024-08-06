@@ -2,7 +2,7 @@ import { IsEmail, IsEmpty, IsOptional, IsString, Length } from 'class-validator'
 
 export class LoginDto {
   @IsString()
-  @Length(6)
+  @Length(11)
   readonly phone: string;
 
   @IsString()

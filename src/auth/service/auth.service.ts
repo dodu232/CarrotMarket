@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { LoginDto } from 'src/auth/dto/login.dto';
 import { VerifyCodeDto } from 'src/auth/dto/verityCode.dto';
 import { PhoneVerifyRepository } from 'src/auth/repository/phoneVerity.repository';
+import { exceptions } from 'winston';
 
 @Injectable()
 export class AuthService {
@@ -30,27 +31,38 @@ export class AuthService {
   }
 
   async createVerifyCode(dto: LoginDto) {
+    const conutVerify = await this.phoneVerifyRepository.countCreateCode(dto.phone);
+
+    if(conutVerify >= 5){
+      throw new BadRequestException('인증은 하루 최대 5회 까지만 가능합니다.');
+    }
+
     const code = this.generateCode();
-    this.sendCode(dto.phone, code);
+    // this.sendCode(dto.phone, code);
     return this.phoneVerifyRepository.createVerifyCode(dto, code);
   }
 
   async verifyCode(dto: VerifyCodeDto){
     const phoneVerify = await this.phoneVerifyRepository.findVerifyCode(dto);
 
+    if(phoneVerify === null){
+      throw new NotFoundException('인증 번호가 발급되지 않았습니다.');
+    }
+
     if(dto.code === phoneVerify.code){
       const now = new Date();
-      const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
 
-      if(phoneVerify.regDate < fiveMinutesAgo){
-          return true;
+      console.log(Math.abs(now.getTime() - phoneVerify.regDate.getTime()));
+
+      if(Math.abs(now.getTime() - phoneVerify.regDate.getTime()) > 300000){ // 5분 지나면 인증 못함!
+        throw new BadRequestException('인증 시간 만료');
       }
       else {
-          return false;
+        return this.phoneVerifyRepository.deleteVerifyCode(dto);
       }
 
     } else {
-        return this.phoneVerifyRepository.deleteVerifyCode(dto);
+      throw new BadRequestException('인증 번호가 일치하지 않습니다.');
     }
 
   }
